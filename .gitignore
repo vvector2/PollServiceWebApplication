@@ -1,0 +1,4 @@
+packages/*
+WebApplicatationPollService/bin/*
+WebApplicatationPollService/obj/*
+.vs/*
