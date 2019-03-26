@@ -1,0 +1,50 @@
+﻿@model WebApplicatationPollService.Models.Entities.PollEntity
+
+@{
+    ViewBag.Title = "PollVote";
+}
+
+<h2>PollVote</h2>
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>VotePollModelView</h4>
+        <hr />
+        <p>@Model.Question</p>
+        <input name="IdPoll"type="hidden" value="@Model.Id" />
+        <input name="IdAnswer" type="hidden" />
+        <div id="AnswersCheckBoxes">
+            @foreach(var item in Model.Answers ) {
+               <input type="checkbox" id="@item.Id" />
+            }
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" onsubmit="GetAnswerFromCheckBoxes()" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section scripts {
+<script>
+    function GetAnswerFromCheckBoxes() {
+        var children = document.getElementById("AnswersCheckBoxes").children;
+        for (var i = 0; i < children.length; i++) {
+            if (children[i].checked === true) {
+                document.getElementById("IdAnswer").value = parseInt(children[i].id);
+                break;
+            }
+        }
+    }
+        
+</script>
+    
+}

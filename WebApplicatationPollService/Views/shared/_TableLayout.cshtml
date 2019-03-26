@@ -1,0 +1,113 @@
+﻿
+
+@{
+    ViewBag.Title = "_TableLayout";
+}
+
+<h2>_TableLayout</h2>
+
+
+<h2>Explore</h2>
+<div class="col-lg-4 ">
+    <div class="input-group">
+        <input id="inputSearch" type="text" name="phrase" class="form-control" placeholder="search" />
+        <div class="input-group-btn">
+            <button onclick="Search()" id="btnSearch" class="btn btn-default" type="submit">
+                <i class="glyphicon glyphicon-search"></i>
+            </button>
+        </div>
+    </div>
+</div>
+<div class="col-lg-2 col-lg-offset-4">
+    <div class="dropdown float-right-class">
+        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            <li onclick="ChangeNumberOfElements(25)">25</li>
+            <li onclick="ChangeNumberOfElements(50)">50</li>
+            <li onclick="ChangeNumberOfElements(75)">75</li>
+        </ul>
+    </div>
+</div>
+
+@RenderBody();
+
+<div class="col-lg-4 col-lg-offset-4" id="pageNav">
+
+</div>
+@section scripts {
+    <script>
+        var numberAllElements = @Model.Elements;
+        window.addEventListener("load");
+        function CreateContentInPageNav() {
+            var params = GetParamFromCurrentLink();
+            var nPages = numberAllElements / params.elements;
+            var div = document.getElementById("pageNav");
+            var curpage = params.page;
+            if (curpage > 10) {
+                div.innerHTML += CreateLinkToPage(0, params);
+                div.innerHTML += "<p>...</p>"
+            }
+            for (var i = 0; i < 10 && i + curpage < nPages; i++) {
+                div.innerHTML += CreateLinkToPage(curpage+i, params);
+            }
+            if (curpage + 10 < nPages) {
+                div.innerHTML += "<p>...</p>";
+                div.innerHTML += CreateLinkToPage(nPages, params);
+            }
+        }
+        function CreateLinkToPage(page, params) {
+            params.params = page;
+            var link = CreateUrl(params);
+            return "<a href='" + link + "'>" + String.toString(params.page) + "</a>"
+        }
+        function ChangeNumberOfElements(elements) {
+            var params = GetParamFromCurrentLink();
+            params.elements = elements;
+            params.page = '0';
+            window.location.href = CreateUrl(params);
+        }
+
+        function GetPage(page) {
+            var params = GetParamFromCurrentLink();
+            params.page= page;
+            window.location.href = CreateUrl(params);
+        }
+        function Sort(nameSort, sortMode) {
+            var params = GetParamFromCurrentLink();
+            params.page = '';
+            params.elements = '';
+            if (orderMode === "DESC") params.orderMode = '1';
+            else params.orderMode = '0';
+            params.nameSort = nameSort;
+            window.location.href = CreateUrl(params);
+        }
+        function Search() {
+            var phrase = document.getElementById("inputSearch").value;
+            if (phrase !== params.phrase) {
+                var url = CreateUrl({ phrase: phrase, orderMode: '', nameSort: '', elements: '', page: '' });
+                window.location.href = url;
+            }
+        }
+        function GetParamFromCurrentLink() {
+            var url = new URL(window.location.href);
+            params = {
+                phrase=url.searchParams.get("phrase"),
+                orderMode=url.searchParams.get("orderMode"),
+                nameSort=url.searchParams.get("nameSort"),
+                elements=url.searchParams.get("elements"),
+                page=url.searchParams.get("page")
+            }
+        }
+        function CreateUrl(params) {
+            var link = window.location.hostname + "/Explore/?";//todo
+            if (params.phrase == ! null && params.phrase !== '') link += "phrase=" + params.phrase + "&";
+            if (params.phrase == ! null && params.phrase !== '') link += "nameSort=" + params.nameSort + "&";
+            if (params.phrase == ! null && params.phrase !== '') link += "orderMode=" + params.orderMode + "&";
+            if (params.phrase == ! null && params.phrase !== '') link += "elements=" + params.elements + "&";
+            if (params.phrase == ! null && params.phrase !== '') link += "page=" + params.page;
+            return link;
+        }
+    </script>
+}

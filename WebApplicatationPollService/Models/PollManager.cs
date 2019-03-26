@@ -10,7 +10,7 @@ using WebApplicatationPollService.Models.ViewModels;
 namespace WebApplicatationPollService.Models {
     public class PollManager {
         //return query linq from filterModelOption
-        public IEnumerable<PollEntity> GetPollsFromFilterOption(FilterOptionModelView filterModelOption,ApplicationDbContext db) {
+        public TableModelView<PollEntity> GetPollsFromFilterOption(FilterOptionModelView filterModelOption,ApplicationDbContext db) {
             PaginationHandler<PollEntity> paginationHandler = new PaginationHandler<PollEntity>(GetProperSortExpression(filterModelOption.nameSort),
                 GetFilterExpression(filterModelOption.phrase));
             return paginationHandler.GetEntityFromFilterOption(filterModelOption, db);

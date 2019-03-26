@@ -213,6 +213,8 @@
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\Entities\PollAnswersEntity.cs" />
     <Compile Include="Models\Entities\PollEntity.cs" />
+    <Compile Include="Models\ViewModels\TableModelView.cs" />
+    <Compile Include="Models\ViewModels\UserProfileModelView.cs" />
     <Compile Include="Models\ViewModels\VotePollModelView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -235,15 +237,26 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Admin\" />
-    <Folder Include="Views\PrivatePoll\" />
-    <Folder Include="Views\User\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Home\Explore.cshtml" />
     <Content Include="Views\shared\_Layout.cshtml" />
+    <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\Account\ForgotPassword.cshtml" />
+    <Content Include="Views\Account\ForgotPasswordConfirmation.cshtml" />
+    <Content Include="Views\Account\ResetPassword.cshtml" />
+    <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
+    <Content Include="Views\Home\PollResult.cshtml" />
+    <Content Include="Views\Home\CreatePoll.cshtml" />
+    <Content Include="Views\Home\PollVote.cshtml" />
+    <Content Include="Views\PrivatePoll\PrivatePollAuth.cshtml" />
+    <Content Include="Views\shared\_TableLayout.cshtml" />
+    <Content Include="Views\Admin\Polls.cshtml" />
+    <Content Include="Views\Admin\Users.cshtml" />
+    <Content Include="Views\User\UserProfile.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

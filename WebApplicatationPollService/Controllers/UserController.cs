@@ -20,8 +20,8 @@ namespace WebApplicatationPollService.Controllers
         }
 
         //show user        
-        public ActionResult UserProfile(string name){            
-            return View(appUserManager.FindByName(name));
+        public ActionResult UserProfile(string id){            
+            return View(appUserManager.FindById(id));
         }
         
         [HttpPost]

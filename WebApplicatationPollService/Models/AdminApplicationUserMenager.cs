@@ -11,7 +11,7 @@ namespace WebApplicatationPollService.Models {
         public AdminApplicationUserMenager(IUserStore<ApplicationUser> store ) : base(store) {
 
         }
-        public IEnumerable<ApplicationUser> GetListUser(FilterOptionModelView filterOptionModelView, ApplicationDbContext db) {
+        public TableModelView<ApplicationUser> GetListUser(FilterOptionModelView filterOptionModelView, ApplicationDbContext db) {
             var paginationHandler = new PaginationHandler<ApplicationUser>(GetProperSortExpression(filterOptionModelView.nameSort), GetFilterExpression(filterOptionModelView.phrase));
             return paginationHandler.GetEntityFromFilterOption(filterOptionModelView, db);
         }

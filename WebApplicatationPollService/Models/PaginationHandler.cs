@@ -13,7 +13,8 @@ namespace WebApplicatationPollService.Models {
             SortFunction = _SortFunction;
             FilterFunction = _FilterFunction;
         }
-        public IEnumerable<T> GetEntityFromFilterOption(FilterOptionModelView filterModelOption, ApplicationDbContext db) {
+        public TableModelView<T> GetEntityFromFilterOption(FilterOptionModelView filterModelOption, 
+            ApplicationDbContext db) {
             IQueryable<T> query;
             if (filterModelOption.phrase != null)//filter using phrase
                 query = db.Set<T>().Where(FilterFunction);
@@ -23,7 +24,10 @@ namespace WebApplicatationPollService.Models {
                 query = query.OrderBy(SortFunction);
             else query = query.OrderByDescending(SortFunction);
 
-            return query.Skip((filterModelOption.page - 1) * filterModelOption.elements).Take(filterModelOption.elements);
+            int numberOfFilteredElm = query.Count();
+
+            IEnumerable<T> elements= query.Skip((filterModelOption.page - 1) * filterModelOption.elements).Take(filterModelOption.elements);
+            return new TableModelView<T>() { NumberOfFilteredElm = numberOfFilteredElm, Elements = elements };
         }
     }
 }

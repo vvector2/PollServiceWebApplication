@@ -1,0 +1,94 @@
+﻿@model WebApplicatationPollService.Models.ViewModels.PollModelView
+
+@{
+    ViewBag.Title = "CreatePoll";
+}
+
+<h2>CreatePoll</h2>
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>PollModelView</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.Question, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Question, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Question, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="col-md-10">
+            <input type="checkbox" onsubmit="ToggleVisibility();" />
+        </div>
+
+        <div style="visibility:hidden" id="FormPassword" class="form-group">
+            @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.UserChecking, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="checkbox">
+                    @Html.EditorFor(model => model.UserChecking)
+                    @Html.ValidationMessageFor(model => model.UserChecking, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+    <div class="form-group" id="listAnswers">
+      <label>Answers</label>
+      <div class="col-md-10">
+        <input id="AnswerInput1" type="text" name="" />
+      </div>
+      <div class="col-md-10">
+        <input id="AnswerInput2" type="text" name="" />
+      </div>       
+    </div>
+    <p class="text-danger" id="ValidationMessageForList" ></p>
+    <button onclick="AddNewAnswerInput();">Add new answer</button>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+@section scripts {
+<script>
+    var counter = 2;
+    function ToggleVisibility() {
+        var form = document.getElementById("FormPassword");
+        if (form.style.visibility == "hidden") form.style.visibility = "visible";
+        else form.style.visibility = "hidden";
+    }
+    document.addEventListener('keydown', OnKeyDown)
+    function OnKeyDown(e) {
+        //when the last input has focus and user pressed down arrow then another input will be added below
+        if (e.keyCode === 40 && e.target === document.activeElement &&
+            e.target.id == "AnswerInput" + counter.toString())
+            AddNewAnswerInput();
+    }
+    function AddNewAnswerInput() {
+        if (counter < 7) {//maximum number of number input is 7
+            counter++;
+            var div = document.createElement("div");
+            div.className = "col-md-10";
+            var idString = "AnswerInput" + counter.toString();
+            div.innerHTML = "<input type='text' id='" + idString + "' " +
+                "  name='lal' />";
+            document.getElementById("listAnswers").appendChild(div);
+        }
+    }
+</script>
+
+}

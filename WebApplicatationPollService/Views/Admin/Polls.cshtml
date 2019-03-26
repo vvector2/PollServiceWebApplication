@@ -1,0 +1,87 @@
+﻿
+@model WebApplicatationPollService.Models.ViewModels.TableModelView<WebApplicatationPollService.Models.Entities.PollEntity>
+@{
+    ViewBag.Title = "Explore";
+    Layout = "~/Views/shared/_TableLayout.cshtml";
+}
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>
+                Id <span onclick="Sort('Id','Desc')" class="glyphicon glyphicon-triangle-bottom"></span>
+                <span onclick="Sort('Id','ASC')" class="glyphicon glyphicon-triangle-top"></span>
+            </th>
+            <th>
+                Question <span onclick="Sort('Question','Desc')" class="glyphicon glyphicon-triangle-bottom"></span>
+                <span onclick="Sort('Question','ASC')" class="glyphicon glyphicon-triangle-top"></span>
+            </th>
+            <th>
+                Views <span onclick="Sort('Views','Desc')" class="glyphicon glyphicon-triangle-bottom"></span>
+                <span onclick="Sort('Views','ASC')" class="glyphicon glyphicon-triangle-top"></span>
+            </th>
+            <th>
+                Creation <span onclick="Sort('DateTime','DESC')" class="glyphicon glyphicon-triangle-bottom"></span>
+                <span onclick="Sort('DateTime','ASC')" class="glyphicon glyphicon-triangle-top"></span>
+            </th>
+            <th>
+                UserChecking <span onclick="Sort('UserChecking','DESC')" class="glyphicon glyphicon-triangle-bottom"></span>
+                <span onclick="Sort('UserChecking','ASC')" class="glyphicon glyphicon-triangle-top"></span>
+            </th>
+            <th>
+                UserCreator <span onclick="Sort('UserCreator','DESC')" class="glyphicon glyphicon-triangle-bottom"></span>
+                <span onclick="Sort('UserCreator','ASC')" class="glyphicon glyphicon-triangle-top"></span>
+            </th>
+            <th>Delete User</th>
+        </tr>
+    </thead>
+    <tbody id="tableContent">
+        @foreach (var item in Model.Elements) {
+            <tr>
+                <td>@Html.ActionLink(item.Id.ToString(), "PollVote", new { id=item.Id})/td>
+                <td>@item.Question</td>
+                <td>@item.View</td>
+                <td>@item.DateTime</td>
+                <td>@item.UserChecking</td>
+                <td>@Html.ActionLink(item.UserCreator.UserName, "UserProfile", "UserController",new { item.UserCreator.Id },null ) </td>
+                <td><input type="checkbox" id="@item.Id" /></td>
+            </tr>
+        }
+    </tbody>
+</table>
+@Html.BeginForm("DeletePoll", "Admin", FormMethod.Post) {
+@Html.AntiForgeryToken();    
+<div id="hiddenInputs">
+       
+</div>
+<input type="submit" onsubmit="return PopulateHiddenInput()" value="DeletePoll" />
+<p id="ValidationMsg" class="text-danger" ></p>
+}
+
+@section scripts {
+<script>
+    function PopulateHiddenInput() {
+        var counter = 0;
+        var children = document.getElementById("tableContent").children;
+        for (var i = 0; i < children.length; i++) {
+            var input = children[i].children[6].firstChild;
+            if (input.checked == true) {
+                AddNewHiddenInput(input.id);
+                counter++;
+            }
+        }
+        if (counter === 0) {
+            document.getElementById("ValidationMsg").innerText="You didn't choose any user to delete."
+            return false;
+        }
+        return true;
+    }
+    function AddNewHiddenInput(id) {
+        var div = document.getElementById("hiddenInputs");
+        div.innerHTML += "<input type='hidden' value='" + String.toString(id) + "' />" 
+    }
+</script>    
+}
+
+
+

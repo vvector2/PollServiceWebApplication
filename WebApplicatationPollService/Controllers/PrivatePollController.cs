@@ -19,6 +19,7 @@ namespace WebApplicatationPollService.Controllers
             appUserManager = new ApplicationUserManager(new UserStore<ApplicationUser>(db));
         }
         public ActionResult PrivatePollAuth(int id) {
+            ViewBag.Id = id;
             return View();
         }
         [HttpPost]

@@ -35,8 +35,8 @@ namespace WebApplicatationPollService.Controllers
         }
         [HttpDelete]
         [ValidateAntiForgeryToken]
-        public ActionResult DeletePoll( IEnumerable<PollEntity> polls) {
-            db.Polls.RemoveRange(polls);
+        public ActionResult DeletePoll( IEnumerable<int> IdPolls) {
+            db.Polls.RemoveRange(db.Polls.Where(x=> IdPolls.Contains(x.Id)));
             db.SaveChanges();
             return RedirectToAction("Polls");
         }

@@ -34,6 +34,11 @@ namespace WebApplicatationPollService.Controllers {
             else return View("Error");
         }
 
+        [Authorize]
+        public ActionResult CreatePoll() {
+            return View();
+        }
+
         [HttpPost]
         [Authorize]
         public ActionResult CreatePoll (PollModelView pollModelView) {
