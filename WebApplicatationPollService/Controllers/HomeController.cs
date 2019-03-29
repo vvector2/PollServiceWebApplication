@@ -30,7 +30,7 @@ namespace WebApplicatationPollService.Controllers {
 
         //list of all polls 
         public ActionResult Explore(FilterOptionModelView filterOptionModelView) {           
-            if (ModelState.IsValid) return View(pollManager.GetPollsFromFilterOption(filterOptionModelView, db));
+            if (ModelState.IsValid) return View(pollManager.GetPollsFromFilterOption(filterOptionModelView, db.Set<PollEntity>()));
             else return View("Error");
         }
 

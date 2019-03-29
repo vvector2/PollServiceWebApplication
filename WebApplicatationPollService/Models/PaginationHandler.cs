@@ -6,6 +6,7 @@ using System.Web;
 using WebApplicatationPollService.Models.ViewModels;
 
 namespace WebApplicatationPollService.Models {
+
     public class PaginationHandler<T> where T : class {
         Expression<Func<T, object>> SortFunction;
         Expression<Func<T, bool>> FilterFunction;
@@ -14,17 +15,17 @@ namespace WebApplicatationPollService.Models {
             FilterFunction = _FilterFunction;
         }
         public TableModelView<T> GetEntityFromFilterOption(FilterOptionModelView filterModelOption, 
-            ApplicationDbContext db) {
+            IQueryable<T> db) {
             IQueryable<T> query;
-            if (filterModelOption.phrase != null)//filter using phrase
-                query = db.Set<T>().Where(FilterFunction);
-            else query = db.Set<T>();
-
-            if (filterModelOption.orderMode)//sort element
+            if (filterModelOption.phrase != null) //filter collection using phrase
+                query = db.Where(FilterFunction);
+            else query = db;
+            
+            if (!filterModelOption.orderMode)//sort element 
                 query = query.OrderBy(SortFunction);
             else query = query.OrderByDescending(SortFunction);
 
-            int numberOfFilteredElm = query.Count();
+            int numberOfFilteredElm = query.Count();//The number will be used to calculate last page.
 
             IEnumerable<T> elements= query.Skip((filterModelOption.page - 1) * filterModelOption.elements).Take(filterModelOption.elements);
             return new TableModelView<T>() { NumberOfFilteredElm = numberOfFilteredElm, Elements = elements };

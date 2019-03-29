@@ -2,3 +2,5 @@ packages/*
 WebApplicatationPollService/bin/*
 WebApplicatationPollService/obj/*
 .vs/*
+WebApplicationPollServiceTest/bin/*
+WebApplicationPollServiceTest/obj/*

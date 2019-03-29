@@ -26,12 +26,12 @@ namespace WebApplicatationPollService.Controllers
         //show list of all polls
         public ActionResult Polls(FilterOptionModelView filterOptionModelView){
             if (!ModelState.IsValid) return View();
-            return View(AdminPollManager.GetPollsFromFilterOption(filterOptionModelView, db));
+            return View(AdminPollManager.GetPollsFromFilterOption(filterOptionModelView, db.Set<PollEntity>()));
         }
         //show list of all user
         public ActionResult Users(FilterOptionModelView filterOptionModelView) {
             if (!ModelState.IsValid) return View();
-            return View(appUserManager.GetListUser(filterOptionModelView, db));
+            return View(appUserManager.GetListUser(filterOptionModelView, db.Set<ApplicationUser>()));
         }
         [HttpDelete]
         [ValidateAntiForgeryToken]
