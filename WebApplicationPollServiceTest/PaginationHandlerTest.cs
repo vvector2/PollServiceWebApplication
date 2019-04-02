@@ -16,16 +16,16 @@ namespace WebApplicationPollServiceTest {
         public PaginationHandlerTest() {
             pollManager = new PollManager();
             listPolls = new List<PollEntity>() {//seeding objects
-                new PollEntity(){Id=0, Question="Q1", DateTime=DateTime.Now , View=12 },
+                new PollEntity(){Id=0, Question="Q1", DateTime=DateTime.Now.AddDays(5) , View=12 },
                 new PollEntity(){Id=1, Question="filter,filter", DateTime=DateTime.Now.AddHours(1) , View=10 },
                 new PollEntity(){Id=2, Question="HELLO", DateTime=DateTime.Now.AddSeconds(123) , View=0 },
                 new PollEntity(){Id=3, Question="Hello", DateTime=DateTime.Now.AddSeconds(1) , View=111 },
                 new PollEntity(){Id=4, Question="FILTER", DateTime=DateTime.Now.AddHours(2) , View=56 },
                 new PollEntity(){Id=5, Question="filTER", DateTime=DateTime.Now , View=55 },
-                new PollEntity(){Id=6, Question="What is your favourite pizza?", DateTime=DateTime.Now , View=13 },
+                new PollEntity(){Id=6, Question="What is your favourite pizza?", DateTime=DateTime.Now.AddSeconds(12) , View=13 },
                 new PollEntity(){Id=7, Question="The best pizza", DateTime=DateTime.Now.AddHours(10) , View=14 },
                 new PollEntity(){Id=8, Question="HI", DateTime=DateTime.Now.AddDays(12) , View=119 },
-                new PollEntity(){Id=9, Question="The best game?", DateTime=DateTime.Now , View=90 },
+                new PollEntity(){Id=9, Question="The best game?", DateTime=DateTime.Now.AddMonths(1) , View=90 },
                 new PollEntity(){Id=10, Question="Q123", DateTime=DateTime.Now.AddDays(1) , View=1 }
             };
             polls = listPolls.AsQueryable<PollEntity>();
@@ -46,7 +46,8 @@ namespace WebApplicationPollServiceTest {
             var options = new FilterOptionModelView() { elements = 10, page = 1 };
 
             var resultTable = pollManager.GetPollsFromFilterOption(options, polls);
-            var expectedTable = new TableModelView<PollEntity>() { Elements = polls.OrderBy(x => x.DateTime).Take(10), NumberOfFilteredElm = 11 };
+            var expectedTable = new TableModelView<PollEntity>() { Elements = new List<PollEntity>() {listPolls[5], listPolls[3], listPolls[6],listPolls[2], listPolls[1], listPolls[4],
+                listPolls[7], listPolls[10],listPolls[0], listPolls[8]}, NumberOfFilteredElm=11 };
             AreTableModelViewEqual(expectedTable, resultTable);
         }
         [TestMethod]
@@ -54,7 +55,7 @@ namespace WebApplicationPollServiceTest {
             var options = new FilterOptionModelView() { elements = 5, page = 3 };
 
             var resultTable = pollManager.GetPollsFromFilterOption(options, polls);
-            var expectedTable = new TableModelView<PollEntity>() { Elements = polls.OrderBy(x => x.DateTime).Skip(10).Take(1), NumberOfFilteredElm = 11 };
+            var expectedTable = new TableModelView<PollEntity>() { Elements = new List<PollEntity>() {listPolls[9] }, NumberOfFilteredElm=11 };
             AreTableModelViewEqual(expectedTable, resultTable);
         }
         [TestMethod]
@@ -62,7 +63,7 @@ namespace WebApplicationPollServiceTest {
             var options = new FilterOptionModelView() { elements = 2, page = 1, orderMode=true };
 
             var resultTable = pollManager.GetPollsFromFilterOption(options, polls);
-            var expectedTable = new TableModelView<PollEntity>() { Elements = new List<PollEntity>() { listPolls[8], listPolls[10] }, NumberOfFilteredElm=11 };
+            var expectedTable = new TableModelView<PollEntity>() { Elements = new List<PollEntity>() { listPolls[9], listPolls[8] }, NumberOfFilteredElm=11 };
             AreTableModelViewEqual(expectedTable, resultTable);
         }
         [TestMethod]
