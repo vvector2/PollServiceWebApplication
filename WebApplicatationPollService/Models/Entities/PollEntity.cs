@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 using WebApplicatationPollService.Models;
@@ -7,7 +8,9 @@ using WebApplicatationPollService.Models.ViewModels;
 
 namespace WebApplicatationPollService.Models.Entities {
     public class PollEntity {
+        [Key]
         public int Id { get; set; }
+        [StringLength(maximumLength:50)]
         public string Question { get; set; }
         public int View { get; set; }
         public DateTime DateTime { get; set; }
