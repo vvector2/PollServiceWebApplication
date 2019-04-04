@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.Mvc;
 using WebApplicatationPollService.Models;
 using WebApplicatationPollService.Models.Entities;
+using WebApplicatationPollService.Models.ViewModels;
 
 namespace WebApplicatationPollService.Controllers
 {
@@ -19,32 +20,34 @@ namespace WebApplicatationPollService.Controllers
             appUserManager = new ApplicationUserManager(new UserStore<ApplicationUser>(db));
         }
         public ActionResult PrivatePollAuth(int id) {
-            ViewBag.Id = id;
+            ViewBag.IdPoll = id;
             return View();
         }
         [HttpPost]
-        public ActionResult PrivatePollAuht(int id, string password) {
+        public ActionResult PrivatePollAuth(PrivatePollPasswordModelView modelView) {
             //check if poll exist
-            var poll = db.Polls.Find(id);
+            var poll = db.Polls.Find(modelView.Id);
             if (poll == null) return new HttpNotFoundResult();
             var privatePollManager = new PrivatePollManager();
-            if (privatePollManager.VerifyPassword(poll.Password, password)) {
+            if (privatePollManager.VerifyPassword(poll.Password, modelView.Password)) {
                 Response.Cookies.Add(privatePollManager.GetSessionCookie(db, poll));//give user session that last 10 minutes
-                return RedirectToAction("PollVote");
+                return RedirectToAction("PollVote", "Home", new {@id=modelView.Id});
             } else {
-                return RedirectToAction("PrivatePollAuth");
+                ModelState.AddModelError("passwdNotValid", "Password is not correct.");
+                return View(modelView);
             }
         }
 
         [NonAction]
         public bool IsRequestAuthorised(PollEntity poll) {
             var user = appUserManager.FindById(User.Identity.GetUserId());
-            if (poll.UserCreator == user) return true;
+            if (user!=null && poll.UserCreator.Id == user.Id) return true;
             var privatePollManager = new PrivatePollManager();
-            if (!privatePollManager.IsAuthorisedByCookie(Request.Cookies["privPoll"].Value, db)) return false;
-            else Response.Cookies["sesPrivPoll"].Expires = DateTime.Now.AddMinutes(10);
+            if (Request.Cookies["privPoll"] != null && privatePollManager.IsAuthorisedByCookie(Request.Cookies["privPoll"].Value, db)) {
+                Request.Cookies["privPoll"].Expires = DateTime.Now.AddMinutes(10);
+                return true;
+            } else  return false;
             
-            return true;
         }
     }
 }

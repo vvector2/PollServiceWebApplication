@@ -18,7 +18,7 @@ namespace WebApplicatationPollService.Models {
         protected virtual Expression<Func<PollEntity,object>> GetProperSortExpression (string propertyName) {
             if (propertyName == "Question") return (x => x.Question);
             else if (propertyName == "View") return (x => x.View);
-            else return (x => x.DateTime);
+            else return (x => x.DateTime.ToString());
         }
         protected virtual Expression<Func<PollEntity, bool>> GetFilterExpression(string phrase) {
             return x => x.Question.ToLower().Contains(phrase);
@@ -28,7 +28,14 @@ namespace WebApplicatationPollService.Models {
         public void Vote(VotePollModelView votePollModelView, ApplicationDbContext db) {
             var pollAnswer= db.PollAnswers.First(x => x.Id == votePollModelView.IdAnswer);
             pollAnswer.Votes++;
-        }          
+            db.SaveChanges();
+        }
+        public PollEntity AddNewPollAndReturnPoll(PollModelView pollModelView, ApplicationUser applicationUser, ApplicationDbContext db) {
+            var pollEntity = new PollEntity(pollModelView, applicationUser);
+            db.Polls.Add(pollEntity);
+            db.SaveChanges();
+            return pollEntity;
+        }
     }
     public class AdminPollManager : PollManager {
         protected override Expression<Func<PollEntity, object>> GetProperSortExpression(string propertyName) {
@@ -36,7 +43,7 @@ namespace WebApplicatationPollService.Models {
             else if (propertyName == "View") return (x => x.View);
             else if (propertyName == "Id") return (x => x.View);
             else if (propertyName == "User") return (x => x.View);
-            else return (x => x.DateTime);
+            else return (x => x.DateTime.ToString());
         }
         protected override Expression<Func<PollEntity, bool>> GetFilterExpression(string phrase) {
             return x => x.Question.ToLower().Contains(phrase) || x.Id.ToString().Contains(phrase) || x.UserCreator.ToString().Contains(phrase);

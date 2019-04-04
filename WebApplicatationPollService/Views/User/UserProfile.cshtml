@@ -1,34 +1,36 @@
 ﻿@model WebApplicatationPollService.Models.ViewModels.UserProfileModelView
 @{
     ViewBag.Title = "UserProfile";
-    Layout = "~/Views/shared/_TableLayout.cshtml";
+    Layout = "~/Views/shared/_Layout.cshtml";
 }
 
 <h2>UserProfile</h2>
 
 <div class="jumbotron">
-    <p>@Model.User.UserName</p>
+    <p>Username: @Model.User.UserName</p>
     @if (User.Identity.IsAuthenticated && (User.Identity.Name == Model.User.UserName || Model.IsAdmin)) {
-        @foreach (var item in Model.User.CreatedPoll) {
-            @Html.ActionLink(item.Question, "Home", new { item.Id })
-            if (Model.IsAdmin) {
-                @Html.BeginForm("DeletePoll", "Admin", FormMethod.Post) {
+        foreach (var item in Model.User.CreatedPoll) {
+            <div>
+            <a class="d-inline" href=@Url.Action("PollVote","Home", new {id=item.Id} )>@item.Question</a>
+            @if (Model.IsAdmin) {
+                using (Html.BeginForm("DeletePoll", "Admin", FormMethod.Post, new { @class = "d-inline" })) {
                     Html.AntiForgeryToken();
                     <input type="hidden" value="@item.Id" />
-                    <input type="submit" value="delete" />
+                    <input type="submit" class="btn-danger" value="delete" />
                 }
             } else {
-                @Html.BeginForm("DeletePoll", "User", FormMethod.Post) {
+                using (Html.BeginForm("DeletePoll", "User", FormMethod.Post, new { @class = "d-inline" })) {
                     Html.AntiForgeryToken();
                     <input type="hidden" value="@item.Id" />
-                    <input type="submit" value="delete" />
+                    <input type="submit" class="btn btn-danger" value="delete" />
                 }
             }
+             </div>
         }
     } else {
         foreach (var item in Model.User.CreatedPoll) {
             if (!string.IsNullOrEmpty(item.Password)) {
-                @Html.ActionLink(item.Question, "Home", new { item.Id })
+                <a href=@Url.Action("PollVote","Home", new {id=item.Id} )>@item.Question</a>
             }
         }
     }

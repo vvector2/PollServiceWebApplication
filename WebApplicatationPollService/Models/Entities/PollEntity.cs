@@ -17,7 +17,7 @@ namespace WebApplicatationPollService.Models.Entities {
         public string Password { get; set; }
         public bool UserChecking { get; set; }
         public virtual ICollection<PollAnswersEntity> Answers { get; set; }
-        public ApplicationUser UserCreator { get; set; }
+        public virtual ApplicationUser UserCreator { get; set; }
         
 
         public PollEntity() {

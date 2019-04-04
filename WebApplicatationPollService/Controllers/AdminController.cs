@@ -35,8 +35,8 @@ namespace WebApplicatationPollService.Controllers
         }
         [HttpDelete]
         [ValidateAntiForgeryToken]
-        public ActionResult DeletePoll( IEnumerable<int> IdPolls) {
-            db.Polls.RemoveRange(db.Polls.Where(x=> IdPolls.Contains(x.Id)));
+        public ActionResult DeletePoll( int IdPolls) {
+            db.Polls.Remove(db.Polls.Find(IdPolls));
             db.SaveChanges();
             return RedirectToAction("Polls");
         }
@@ -44,7 +44,6 @@ namespace WebApplicatationPollService.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteUser(ApplicationUser user) {
             appUserManager.Delete(user);
-            //db.SaveChanges();
             return RedirectToAction("Users");
         }
     }

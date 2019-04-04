@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using WebApplicatationPollService.Models;
+using WebApplicatationPollService.Models.ViewModels;
 
 namespace WebApplicatationPollService.Controllers
 {
@@ -20,13 +21,17 @@ namespace WebApplicatationPollService.Controllers
         }
 
         //show user        
-        public ActionResult UserProfile(string id){            
-            return View(appUserManager.FindById(id));
+        public ActionResult UserProfile(string name){
+            if (string.IsNullOrEmpty(name)) return new HttpNotFoundResult();
+            var user = appUserManager.FindByName(name);
+            if (user == null) return new HttpNotFoundResult();
+            else return View(new UserProfileModelView() { User = user, IsAdmin = User.IsInRole("Admin") });
+            
         }
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "User")]
+        [Authorize]
         public ActionResult DeletePoll(int id) {
             var user = appUserManager.FindById(User.Identity.GetUserId());
             var poll = db.Polls.Find(id);

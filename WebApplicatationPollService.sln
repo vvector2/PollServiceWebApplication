@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.27703.2035
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplicatationPollService", "WebApplicatationPollService\WebApplicatationPollService.csproj", "{34F8F3C2-6F8A-4EED-8810-308F68209AD6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplicationPollServiceTest", "WebApplicationPollServiceTest\WebApplicationPollServiceTest.csproj", "{3865D761-B7C7-482D-A1C4-8A89BE8D6DE0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplicatationPollService.Test", "WebApplicationPollServiceTest\WebApplicatationPollService.Test.csproj", "{3865D761-B7C7-482D-A1C4-8A89BE8D6DE0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

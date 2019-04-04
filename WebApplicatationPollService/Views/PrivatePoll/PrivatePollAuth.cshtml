@@ -1,29 +1,28 @@
-﻿
+﻿@model WebApplicatationPollService.Models.ViewModels.PrivatePollPasswordModelView
 @{
     ViewBag.Title = "PrivatePollAuth";
 }
 
-<h2>PrivatePollAuth</h2>
+<h2>Private Poll Login</h2>
 
 
-@using (Html.BeginForm()) {
+@using (Html.BeginForm("PrivatePollAuth", "PrivatePoll", FormMethod.Post)) {
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        <h4>LoginViewModel</h4>
         <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <input type="hidden" value="@ViewBag.IdPoll" />
+        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+        <input type="hidden" name="Id" value="@ViewBag.IdPoll" />
         <div class="form-group">
             <label class="control-label col-md-2" >Password</label>
             <div class="col-md-10">
-                <input class="form-control" type="text" name="password" />
+                <input class="form-control" type="text" name="Password" />
             </div>
         </div>
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Send" class="btn btn-default" />
             </div>
         </div>
     </div>

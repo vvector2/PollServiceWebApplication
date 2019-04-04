@@ -10,5 +10,9 @@ namespace WebApplicatationPollService.Models.ViewModels {
         public int elements { get; set; }//number of element in table 
         [Range(1, int.MaxValue)]//page start at 1
         public int page { get; set; }
+
+        public FilterOptionModelView() {
+            elements = 10;page = 1;
+        }
     }
 }

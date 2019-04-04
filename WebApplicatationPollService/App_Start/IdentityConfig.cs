@@ -94,11 +94,12 @@ namespace WebApplicatationPollService
         }
         public new async Task<SignInStatus> PasswordSignInAsync(string userName, string password, bool isPersistent, bool shouldLockout) {
             SignInStatus result =(SignInStatus) await base.PasswordSignInAsync(userName, password, isPersistent, shouldLockout);
-            var user = await UserManager.FindByNameAsync(userName);
-            if (!(await UserManager.IsEmailConfirmedAsync(user.Id))) {
-                return SignInStatus.EmailNotConfirmed;
-            } else return result;
-
+            if (result == SignInStatus.Success) {
+                var user = await UserManager.FindByNameAsync(userName);
+                bool isEmailConfirmed = await UserManager.IsEmailConfirmedAsync(user.Id);
+                if (!isEmailConfirmed) result = SignInStatus.EmailNotConfirmed;
+            }
+            return result;
         }
     }
 }

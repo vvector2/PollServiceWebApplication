@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using System.Web;
@@ -9,9 +10,15 @@ using System.Web;
 namespace WebApplicatationPollService.Models {
     public class MyEmailService : IIdentityMessageService {
         public async Task SendAsync(IdentityMessage message) {
-            var mailMessage = new MailMessage() { Subject = message.Subject, Body = message.Body, IsBodyHtml = true };
+            var mailMessage = new MailMessage() { Subject = message.Subject, Body = message.Body, IsBodyHtml = true, From = new MailAddress("333") };
             mailMessage.To.Add(new MailAddress(message.Destination));
-            using (var smtp = new SmtpClient() ) {
+            using (var smtp = new SmtpClient()) {
+                smtp.Port = 587;
+                smtp.Host = "3333";
+                smtp.EnableSsl = true;
+                smtp.Credentials = new NetworkCredential() {
+                    UserName = "3333", Password = ""
+                };
                 await smtp.SendMailAsync(mailMessage);
             }
         }

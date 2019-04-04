@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data.Entity;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
@@ -26,12 +27,12 @@ namespace WebApplicatationPollService.Models
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext()
-            : base("DefaultConnection", throwIfV1Schema: false)
-        {
+            : base("DefaultConnection", throwIfV1Schema: false) {
+
         }
-        public DbSet<PollEntity> Polls { get; set; }
-        public DbSet<PollAnswersEntity> PollAnswers { get; set; }
-        public DbSet<SessionUserPrivatePollEntity> SessionPrivatePoll { get; set; }
+        public virtual DbSet<PollEntity> Polls { get; set; }
+        public virtual DbSet<PollAnswersEntity> PollAnswers { get; set; }
+        public virtual DbSet<SessionUserPrivatePollEntity> SessionPrivatePoll { get; set; }
         public static ApplicationDbContext Create()
         {
             return new ApplicationDbContext();
@@ -40,9 +41,9 @@ namespace WebApplicatationPollService.Models
             base.OnModelCreating(modelBuilder);
             //deleteting from table two field which will be not used
             modelBuilder.Entity<ApplicationUser>().Ignore(x => x.PhoneNumber)
-                .Ignore(x => x.PhoneNumberConfirmed)
-                .Ignore(x => x.TwoFactorEnabled);
-
+                .Ignore(x => x.PhoneNumberConfirmed);
         }
+        
     }
+
 }

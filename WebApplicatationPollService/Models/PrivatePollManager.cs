@@ -8,24 +8,26 @@ using WebApplicatationPollService.Models.Entities;
 
 namespace WebApplicatationPollService.Models {
     public class PrivatePollManager {
-        public SessionUserPrivatePollEntity session;
+        private SessionUserPrivatePollEntity session;
+        private const int sessionTimeoutMinute = 10;
 
         public bool IsAuthorisedByCookie(string cookieCode, ApplicationDbContext db) {
-            var session = db.SessionPrivatePoll.Find(cookieCode);
+            var session = db.SessionPrivatePoll.Where(x => x.SessionID.ToString()==cookieCode).FirstOrDefault();
             this.session = session;
             if (session == null || session.DateTime.AddMinutes(10) < DateTime.Now) return false;
             else {
                 session.DateTime = DateTime.Now;
-                db.Entry(session).State = System.Data.Entity.EntityState.Modified;
+                db.SaveChanges();
                 return true;
             }
         }
         public HttpCookie GetSessionCookie(ApplicationDbContext db , PollEntity poll) {
-            string idSession = new Guid().ToString();
-            db.SessionPrivatePoll.Add(new SessionUserPrivatePollEntity() { sessionID = idSession, DateTime = DateTime.Now, Poll = poll });
-            var cookie = new HttpCookie("sesPrivPoll");
-            cookie.Expires = DateTime.Now.AddMinutes(10);
-            cookie.Value = idSession;
+            var idSession = Guid.NewGuid();
+            db.SessionPrivatePoll.Add(new SessionUserPrivatePollEntity() { SessionID = idSession, DateTime = DateTime.Now, Poll = poll });
+            var cookie = new HttpCookie("privPoll");
+            cookie.Expires = DateTime.Now.AddMinutes(sessionTimeoutMinute);
+            cookie.Value = idSession.ToString();
+            db.SaveChanges();
             return cookie;
         }
         //more secure hashing !!
@@ -34,8 +36,7 @@ namespace WebApplicatationPollService.Models {
             return Convert.ToBase64String(sha1.ComputeHash(Encoding.ASCII.GetBytes(password)));
         } 
         public bool VerifyPassword(string password , string notHashedPassword) {
-            var sha1 = new SHA1CryptoServiceProvider();
-            if (password == HashPassword(password)) return true;
+            if (password == HashPassword(notHashedPassword)) return true;
             else return false;
         }
 
