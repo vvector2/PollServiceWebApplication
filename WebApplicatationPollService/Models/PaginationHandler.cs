@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Security.Principal;
 using System.Web;
 using WebApplicatationPollService.Models.ViewModels;
 
 namespace WebApplicatationPollService.Models {
 
-    public class PaginationHandler<T> where T : class {
+    public class PaginationHandler<T> where T : class  {
         Expression<Func<T, object>> SortFunction;
         Expression<Func<T, bool>> FilterFunction;
         public PaginationHandler(Expression<Func<T, object>> _SortFunction, Expression<Func<T, bool>> _FilterFunction) {

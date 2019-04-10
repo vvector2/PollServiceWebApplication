@@ -18,7 +18,7 @@ namespace WebApplicatationPollService.Models {
         private Expression<Func<ApplicationUser, object>> GetProperSortExpression(string nameSort) {
             if (nameSort == "UserName") return x => x.UserName;
             else if (nameSort == "Email") return x => x.Email;
-            else  return x => x.Id;
+            else  return x => x.Id.ToString();
         } 
         private Expression<Func<ApplicationUser, bool>> GetFilterExpression(string phrase) {
             return x => x.UserName.ToLower().Contains(phrase) ||

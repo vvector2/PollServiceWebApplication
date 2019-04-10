@@ -30,9 +30,11 @@
 </div>
 @section scripts {
     <script>
-        var numberAllElements = @ViewBag.Elements;
+        var numberAllElements = @ViewBag.Elements;//Number of filtered elements. It is used to calculate last page.
         window.addEventListener("DOMContentLoaded", CreateContentInPageNav);
+
         function CreateContentInPageNav() {
+            //nPages is the last page , param.page is current page
             var params = GetParamFromCurrentLink();
             var nPages = numberAllElements / params.elements;
             if (nPages %1 !==0)
@@ -45,31 +47,26 @@
                 startEnumeratingPage = params.page;
             } else startEnumeratingPage = 1;
 
-            for (var i = 0; i < 10 && i + startEnumeratingPage <= nPages; i++)
+            for (var i = 0; i < 10 && i + startEnumeratingPage <= nPages; i++)//creating next 10 pages
                 div.innerHTML += CreateLinkToPage(i + startEnumeratingPage, params);
 
-            if (params.page + 10 < nPages) {
+            if (params.page + 10 < nPages) {//creating link to last page 
                 div.innerHTML += "<p>...</p>";
                 div.innerHTML += CreateLinkToPage(nPages, params);
             }
         }
         function CreateLinkToPage(page, params) {
-            params.params = page;
+            var currentPage = params.page;
+            params.page = page;
             var link = CreateUrl(params);
-            if (page == params.page) return "<a style='text-decoration: underline;' href='" + link + "'>" + page + "</a>";
+            params.page = currentPage;
+            if (page == currentPage) return "<a style='text-decoration: underline;' href='" + link + "'>" + page + "</a>";
             else return "<a href='" + link + "'>" + page + "</a>";
         }
         function ChangeNumberOfElements(elements) {
             var params = GetParamFromCurrentLink();
             params.elements = elements;
             params.page = '1';
-            console.log(CreateUrl(params));
-            window.location.href = CreateUrl(params);
-        }
-
-        function GetPage(page) {
-            var params = GetParamFromCurrentLink();
-            params.page = page;
             console.log(CreateUrl(params));
             window.location.href = CreateUrl(params);
         }
@@ -81,13 +78,13 @@
             else params.orderMode = 'false';
             params.nameSort = nameSort;
             console.log(CreateUrl(params));
-            window.location.href = CreateUrl(params);
+            window.location.replace(CreateUrl(params));
         }
         function Search() {
             var phrase = document.getElementById("inputSearch").value;
             var url = CreateUrl({ phrase: phrase, orderMode: '', nameSort: '', elements: '10', page: '1', });
             console.log(url);
-            window.location.assign(url);
+            window.location.replace(url);
         }
         function GetParamFromCurrentLink() {
             var url = new URL(window.location.href);
@@ -102,7 +99,7 @@
             return params;
         }
         function CreateUrl(params) {
-            var link = window.location.host + "/Home/Explore/?";
+            var link = window.location.pathname+"?";
             if (params.phrase != null && params.phrase != '') link += "phrase=" + params.phrase + "&";
             if (params.nameSort != null && params.nameSort != '') link += "nameSort=" + params.nameSort + "&";
             if (params.orderMode != null && params.orderMode != '') link += "orderMode=" + params.orderMode + "&";

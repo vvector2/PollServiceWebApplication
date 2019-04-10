@@ -61,7 +61,7 @@ namespace WebApplicatationPollService.Controllers {
             var poll = db.Polls.Find(votePollModelView.IdPoll);
             var pollAnswer = db.PollAnswers.Find(votePollModelView.IdAnswer);
             if (poll == null || pollAnswer == null) return new HttpStatusCodeResult(System.Net.HttpStatusCode.BadRequest);
-            if (!IsPrivPollAuthorised(poll)) return new HttpStatusCodeResult(System.Net.HttpStatusCode.Unauthorized);
+            if (!IsPrivPollAuthorised(poll)) return RedirectToAction("PrivatePollAuth", "PrivatePoll", new { id = votePollModelView.IdPoll });
             
             if (poll.UserChecking ) {//checking if user is logged in
                 if (!User.Identity.IsAuthenticated) return new HttpStatusCodeResult(System.Net.HttpStatusCode.Unauthorized);
@@ -90,7 +90,8 @@ namespace WebApplicatationPollService.Controllers {
             PollEntity poll = db.Polls.Find(id);            
             if (poll == null) return new HttpStatusCodeResult(404);//check if the poll exists
             if (!IsPrivPollAuthorised(poll)) return RedirectToAction("PrivatePollAuth", "PrivatePoll" ,new { id });
-            poll.View++;db.SaveChanges();
+            poll.View++;
+            db.SaveChanges();
             return View(nameOfView, poll);
         }
         

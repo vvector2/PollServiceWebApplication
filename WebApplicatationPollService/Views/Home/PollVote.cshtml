@@ -19,7 +19,7 @@
         <div id="AnswersCheckBoxes">
             @foreach(var item in Model.Answers ) {
                <label class="label-control">@item.Answers</label>
-               <input onclick="SetIdAnswerValue(@item.Id)" type="checkbox" id="@item.Id" />
+               <input onclick="SetIdAnswerValue(@item.Id)" class="form-control" type="checkbox" id="@item.Id" />
             }
         </div>
         <div class="form-group">
@@ -40,7 +40,7 @@
         document.getElementById("idAnswer").value = id;
         console.log("hi");
         var inputs = document.getElementsByTagName('input');
-        for (var i = 0; i < inputs.length; i++) {
+        for (var i = 0; i < inputs.length; i++) {//set rest of checkboxes on unchecked
             console.log(inputs[i].id);
             if (inputs[i].type === 'checkbox' && inputs[i].id != id ) inputs[i].checked = false;
         }

@@ -20,8 +20,7 @@ namespace WebApplicatationPollService.Controllers
             appUserManager = new ApplicationUserManager(new UserStore<ApplicationUser>(db));
         }
         public ActionResult PrivatePollAuth(int id) {
-            ViewBag.IdPoll = id;
-            return View();
+            return View( new PrivatePollPasswordModelView() {Id=id } );
         }
         [HttpPost]
         public ActionResult PrivatePollAuth(PrivatePollPasswordModelView modelView) {
@@ -41,10 +40,10 @@ namespace WebApplicatationPollService.Controllers
         [NonAction]
         public bool IsRequestAuthorised(PollEntity poll) {
             var user = appUserManager.FindById(User.Identity.GetUserId());
-            if (user!=null && poll.UserCreator.Id == user.Id) return true;
+            if (user!=null && poll.UserCreator.Id == user.Id) return true;//creator of poll always has access 
             var privatePollManager = new PrivatePollManager();
             if (Request.Cookies["privPoll"] != null && privatePollManager.IsAuthorisedByCookie(Request.Cookies["privPoll"].Value, db)) {
-                Request.Cookies["privPoll"].Expires = DateTime.Now.AddMinutes(10);
+                Request.Cookies["privPoll"].Expires = DateTime.Now.AddMinutes(10);//updating cookie
                 return true;
             } else  return false;
             

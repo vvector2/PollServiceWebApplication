@@ -12,5 +12,6 @@ namespace WebApplicatationPollService.Models.Entities {
         public string Answers { get; set; }
         public int Votes { get; set; }
         public virtual PollEntity Poll { get; set; }
+        public virtual ICollection<ApplicationUser> ListUserWhoVoted { get; set; }
     }
 }

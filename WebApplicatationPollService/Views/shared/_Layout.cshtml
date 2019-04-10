@@ -30,7 +30,7 @@
             <a class="nav-item nav-link" href=@Url.Action( "Login", "Account" ) id="LoginLink">Login</a>
         }
     </nav>
-    <div class="container jumbotron">
+    <div id="body-layout" class="container jumbotron">
         @RenderBody()
         @RenderSection("scripts", false)
     </div>

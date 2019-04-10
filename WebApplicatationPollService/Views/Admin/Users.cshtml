@@ -11,11 +11,11 @@
     <thead>
         <tr>
             <th>
-                Id <span onclick="Sort('Id','Desc')" class="fas fa-sort-down"></span>
+                Id <span onclick="Sort('Id','DESC')" class="fas fa-sort-down"></span>
                 <span onclick="Sort('Id','ASC')" class="fas fa-sort-up"></span>
             </th>
             <th>
-                UserName <span onclick="Sort('UserName','Desc')" class="fas fa-sort-down"></span>
+                UserName <span onclick="Sort('UserName','DESC')" class="fas fa-sort-down"></span>
                 <span onclick="Sort('UserName','ASC')" class="fas fa-sort-up"></span>
             </th>
             <th>
@@ -34,14 +34,14 @@
                 <td>@item.UserName</td>
                 <td>@item.Email</td>
                 <td>
-                    @Html.BeginForm("DeleteUser", "User", FormMethod.Post) {
+                    @using (Html.BeginForm("DeleteUser", "Admin", FormMethod.Post)) {
                     @Html.AntiForgeryToken();
-                    <input type="hidden" value="@item.Id" />
-                    <input type="button" value="delete" />
+                    <input type="hidden" name="id" value="@item.Id" />
+                    <input type="submit" class="btn btn-danger" value="delete" />
                     }
                 </td>
                 
             </tr>
-        }
+                    }
     </tbody>
 </table>

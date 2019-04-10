@@ -12,7 +12,7 @@
     <div class="form-horizontal">
         <hr />
         @Html.ValidationSummary(false, "", new { @class = "text-danger" })
-        <input type="hidden" name="Id" value="@ViewBag.IdPoll" />
+        <input type="hidden" name="Id" value="@Model.Id" />
         <div class="form-group">
             <label class="control-label col-md-2" >Password</label>
             <div class="col-md-10">

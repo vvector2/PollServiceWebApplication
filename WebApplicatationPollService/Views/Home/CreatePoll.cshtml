@@ -71,7 +71,7 @@
     }
     document.addEventListener('keydown', OnKeyDown)
     function OnKeyDown(e) {
-        //when the last input has focus and user pressed down arrow then another input will be added below
+        //when the lowest input has focus and user pressed arrow down then another input will be added below
         if (e.keyCode === 40 && e.target === document.activeElement &&
             e.target.id == "AnswerInput" + counter.toString())
             AddNewAnswerInput();
@@ -82,9 +82,11 @@
             var div = document.createElement("div");
             div.className = "col-md-10";
             var idString = "AnswerInput" + counter.toString();
+            var nameStr = "PollModelView.Answers[" + (counter - 1).toString() + "]"
             div.innerHTML = "<input type='text' class='form-control' id='" + idString + "' " +
-                "  name='lal' />";
+                "  name='" + nameStr + "' />";
             document.getElementById("listAnswers").appendChild(div);
+            document.getElementById(idString).focus();
         }
     }
 </script>

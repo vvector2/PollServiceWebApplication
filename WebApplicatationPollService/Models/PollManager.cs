@@ -6,6 +6,7 @@ using System.Web;
 using WebApplicatationPollService.Controllers;
 using WebApplicatationPollService.Models.Entities;
 using WebApplicatationPollService.Models.ViewModels;
+using System.Data.Entity.SqlServer;
 
 namespace WebApplicatationPollService.Models {
     public class PollManager {
@@ -17,8 +18,8 @@ namespace WebApplicatationPollService.Models {
         }
         protected virtual Expression<Func<PollEntity,object>> GetProperSortExpression (string propertyName) {
             if (propertyName == "Question") return (x => x.Question);
-            else if (propertyName == "View") return (x => x.View);
-            else return (x => x.DateTime.ToString());
+            else if (propertyName == "View") return (x => SqlFunctions.StringConvert( (decimal) x.View , 10) );
+            else return x => x.DateTime.ToString();
         }
         protected virtual Expression<Func<PollEntity, bool>> GetFilterExpression(string phrase) {
             return x => x.Question.ToLower().Contains(phrase);
@@ -40,13 +41,14 @@ namespace WebApplicatationPollService.Models {
     public class AdminPollManager : PollManager {
         protected override Expression<Func<PollEntity, object>> GetProperSortExpression(string propertyName) {
             if (propertyName == "Question") return (x => x.Question);
-            else if (propertyName == "View") return (x => x.View);
-            else if (propertyName == "Id") return (x => x.View);
-            else if (propertyName == "User") return (x => x.View);
+            else if (propertyName == "View") return (x => SqlFunctions.StringConvert((decimal)x.View, 10));
+            else if (propertyName == "Id") return (x => x.Id.ToString());
+            else if (propertyName == "UserName") return (x => x.UserCreator.UserName);
+            else if (propertyName == "UserChecking") return x => x.UserChecking.ToString();
             else return (x => x.DateTime.ToString());
         }
         protected override Expression<Func<PollEntity, bool>> GetFilterExpression(string phrase) {
-            return x => x.Question.ToLower().Contains(phrase) || x.Id.ToString().Contains(phrase) || x.UserCreator.ToString().Contains(phrase);
+            return x => x.Question.ToLower().Contains(phrase) || x.Id.ToString().ToLower().Contains(phrase) || x.UserCreator.UserName.ToString().ToLower().Contains(phrase);
         }
     }
 

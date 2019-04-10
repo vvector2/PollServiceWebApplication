@@ -10,9 +10,9 @@ namespace WebApplicatationPollService.Models {
     public class PrivatePollManager {
         private SessionUserPrivatePollEntity session;
         private const int sessionTimeoutMinute = 10;
-
+        //check if session still last 
         public bool IsAuthorisedByCookie(string cookieCode, ApplicationDbContext db) {
-            var session = db.SessionPrivatePoll.Where(x => x.SessionID.ToString()==cookieCode).FirstOrDefault();
+            var session = db.SessionPrivatePoll.Where(x => x.SessionID.ToString() == cookieCode).FirstOrDefault();
             this.session = session;
             if (session == null || session.DateTime.AddMinutes(10) < DateTime.Now) return false;
             else {
@@ -21,6 +21,7 @@ namespace WebApplicatationPollService.Models {
                 return true;
             }
         }
+        //Create new session in datebase and return cookie
         public HttpCookie GetSessionCookie(ApplicationDbContext db , PollEntity poll) {
             var idSession = Guid.NewGuid();
             db.SessionPrivatePoll.Add(new SessionUserPrivatePollEntity() { SessionID = idSession, DateTime = DateTime.Now, Poll = poll });
@@ -30,7 +31,7 @@ namespace WebApplicatationPollService.Models {
             db.SaveChanges();
             return cookie;
         }
-        //more secure hashing !!
+        
         public string HashPassword(string password) {
             var sha1 = new SHA1CryptoServiceProvider();
             return Convert.ToBase64String(sha1.ComputeHash(Encoding.ASCII.GetBytes(password)));

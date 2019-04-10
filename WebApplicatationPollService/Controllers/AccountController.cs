@@ -112,8 +112,12 @@ namespace WebApplicatationPollService.Controllers
                 {
                     string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                     var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
-
+                    try {
+                        await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                    } catch (Exception) {
+                        UserManager.Delete(user);
+                        return new HttpStatusCodeResult(500);
+                    }                  
                     ViewBag.Email = model.Email;
                     return View("ConfirmEmailWasSended");
                 }

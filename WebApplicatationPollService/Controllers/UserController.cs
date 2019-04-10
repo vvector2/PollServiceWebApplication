@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using WebApplicatationPollService.Models;
 using WebApplicatationPollService.Models.ViewModels;
+using System.Data.Entity;
 
 namespace WebApplicatationPollService.Controllers
 {
@@ -34,7 +35,7 @@ namespace WebApplicatationPollService.Controllers
         [Authorize]
         public ActionResult DeletePoll(int id) {
             var user = appUserManager.FindById(User.Identity.GetUserId());
-            var poll = db.Polls.Find(id);
+            var poll = db.Polls.Include(x => x.Answers).Where(x => x.Id == id).FirstOrDefault();
             if (poll == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             if (user.CreatedPoll.Any(x => x.Id == id))
                 db.Polls.Remove(poll);

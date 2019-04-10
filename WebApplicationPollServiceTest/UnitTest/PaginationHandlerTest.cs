@@ -10,11 +10,8 @@ namespace WebApplicationPollServiceTest {
     //this tests check correctness of function GetEntityFromFilterOption
     [TestClass]
     public class PaginationHandlerTest {
-        private PollManager pollManager;
-        private IQueryable<PollEntity> polls;
-        private List<PollEntity> listPolls;
+        private List<PollEntity> listPolls; 
         public PaginationHandlerTest() {
-            pollManager = new PollManager();
             listPolls = new List<PollEntity>() {//seeding objects
                 new PollEntity(){Id=0, Question="Q1", DateTime=DateTime.Now.AddDays(5) , View=12 },
                 new PollEntity(){Id=1, Question="filter,filter", DateTime=DateTime.Now.AddHours(1) , View=10 },
@@ -28,7 +25,6 @@ namespace WebApplicationPollServiceTest {
                 new PollEntity(){Id=9, Question="The best game?", DateTime=DateTime.Now.AddMonths(1) , View=90 },
                 new PollEntity(){Id=10, Question="Q123", DateTime=DateTime.Now.AddDays(1) , View=1 }
             };
-            polls = listPolls.AsQueryable<PollEntity>();
         }
         //checkif the object properties are the same
         private void AreTableModelViewEqual(TableModelView<PollEntity> exceptedTable, TableModelView<PollEntity> resultTable) {
@@ -44,8 +40,8 @@ namespace WebApplicationPollServiceTest {
         [TestMethod]
         public void GetPollsFromFilterOption_Option_Element10_page1() {
             var options = new FilterOptionModelView() { elements = 10, page = 1 };
-
-            var resultTable = pollManager.GetPollsFromFilterOption(options, polls);
+            var paginationHandler = new PaginationHandler<PollEntity>(x => x.DateTime, x => true);
+            var resultTable = paginationHandler.GetEntityFromFilterOption(options, listPolls.AsQueryable());
             var expectedTable = new TableModelView<PollEntity>() { Elements = new List<PollEntity>() {listPolls[5], listPolls[3], listPolls[6],listPolls[2], listPolls[1], listPolls[4],
                 listPolls[7], listPolls[10],listPolls[0], listPolls[8]}, NumberOfFilteredElm=11 };
             AreTableModelViewEqual(expectedTable, resultTable);
@@ -53,8 +49,8 @@ namespace WebApplicationPollServiceTest {
         [TestMethod]
         public void GetPollsFromFilterOption_Option_Element5_page3() {
             var options = new FilterOptionModelView() { elements = 5, page = 3 };
-
-            var resultTable = pollManager.GetPollsFromFilterOption(options, polls);
+            var paginationHandler = new PaginationHandler<PollEntity>(x => x.DateTime, x => true);
+            var resultTable = paginationHandler.GetEntityFromFilterOption(options, listPolls.AsQueryable());
             var expectedTable = new TableModelView<PollEntity>() { Elements = new List<PollEntity>() {listPolls[9] }, NumberOfFilteredElm=11 };
             AreTableModelViewEqual(expectedTable, resultTable);
         }
@@ -62,23 +58,24 @@ namespace WebApplicationPollServiceTest {
         public void GetPollsFromFilterOption_Option_OrderMode1_Element2_page1() {
             var options = new FilterOptionModelView() { elements = 2, page = 1, orderMode=true };
 
-            var resultTable = pollManager.GetPollsFromFilterOption(options, polls);
+            var paginationHandler = new PaginationHandler<PollEntity>(x => x.DateTime, x => true);
+            var resultTable = paginationHandler.GetEntityFromFilterOption(options, listPolls.AsQueryable());
             var expectedTable = new TableModelView<PollEntity>() { Elements = new List<PollEntity>() { listPolls[9], listPolls[8] }, NumberOfFilteredElm=11 };
             AreTableModelViewEqual(expectedTable, resultTable);
         }
         [TestMethod]
         public void GetPollsFromFilterOption_Option_nameSortQuestion_Element3_page4() {
             var options = new FilterOptionModelView() { elements = 3, page = 4, nameSort="Question"};
-
-            var resultTable = pollManager.GetPollsFromFilterOption(options, polls);
+            var paginationHandler = new PaginationHandler<PollEntity>(x => x.Question, x => true);
+            var resultTable = paginationHandler.GetEntityFromFilterOption(options, listPolls.AsQueryable());
             var expectedTable = new TableModelView<PollEntity>() { Elements = new List<PollEntity>() { listPolls[7],listPolls[6]}, NumberOfFilteredElm = 11 };
             AreTableModelViewEqual(expectedTable, resultTable);
         }
         [TestMethod]
         public void GetPollsFromFilterOption_Option_Phrasefil_nameSortView_OrderMode1_Element2_page1() {
             var options = new FilterOptionModelView() { elements = 2, page = 1, nameSort = "View", orderMode = true , phrase="fil" };
-
-            var resultTable = pollManager.GetPollsFromFilterOption(options, polls);
+            var paginationHandler = new PaginationHandler<PollEntity>(x => x.View, x => x.Question.ToLower().Contains(options.phrase));
+            var resultTable = paginationHandler.GetEntityFromFilterOption(options, listPolls.AsQueryable());
             var expectedTable = new TableModelView<PollEntity>() {
                 Elements = new List<PollEntity>() { listPolls[4],listPolls[5]}, NumberOfFilteredElm = 3 };
             AreTableModelViewEqual(expectedTable, resultTable);
@@ -86,8 +83,8 @@ namespace WebApplicationPollServiceTest {
         [TestMethod]
         public void GetPollsFromFilterOption_Option_Phrasepizza_nameSortQuestion_Element2_page1() {
             var options = new FilterOptionModelView() { elements = 2, page = 1, nameSort = "View",phrase = "pizza" };
-
-            var resultTable = pollManager.GetPollsFromFilterOption(options, polls);
+            var paginationHandler = new PaginationHandler<PollEntity>(x => x.View, x => x.Question.ToLower().Contains(options.phrase));
+            var resultTable = paginationHandler.GetEntityFromFilterOption(options, listPolls.AsQueryable());
             var expectedTable = new TableModelView<PollEntity>() {
                 Elements = new List<PollEntity>() {listPolls[6] , listPolls[7] }, NumberOfFilteredElm = 2};
             AreTableModelViewEqual(expectedTable, resultTable);
